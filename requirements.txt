@@ -1,0 +1,14 @@
+fastapi
+uvicorn
+jinja2
+python-multipart
+PyMuPDF
+openai
+python-dotenv
+# httpx
+requests
+scikit-learn
+# python-docx
+docx2txt        
+sentence-transformers
+# spacy

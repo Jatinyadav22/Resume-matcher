@@ -1,0 +1,311 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CV Shortlisting with NLP</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+        }
+        
+        .cv-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .loader {
+            border-top-color: #3b82f6;
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .highlight {
+            background-color: rgba(255, 255, 0, 0.3);
+            padding: 0 2px;
+        }
+    </style>
+</head>
+<body>
+    <div class="min-h-screen flex flex-col">
+        <!-- Header -->
+        <header class="gradient-bg text-white">
+            <div class="container mx-auto px-4 py-6">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h1 class="text-2xl font-bold">CV<span class="text-indigo-200">NLP</span></h1>
+                        <p class="text-indigo-100">AI-powered CV Shortlisting</p>
+                    </div>
+                    <nav>
+                        <ul class="flex space-x-6">
+                            <li><a href="#" class="hover:text-indigo-200">Home</a></li>
+                            <li><a href="#" class="hover:text-indigo-200">How it works</a></li>
+                            <li><a href="#" class="hover:text-indigo-200">About</a></li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main content -->
+        <main class="flex-grow container mx-auto px-4 py-8">
+            <div class="max-w-4xl mx-auto">
+                <!-- Hero section -->
+                <section class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-4">Shortlist Candidates Faster with AI</h2>
+                    <p class="text-lg text-gray-600 mb-6">Upload job descriptions and CVs, and our NLP system will analyze semantic similarities to find the best matches.</p>
+                </section>
+
+                <!-- Upload section -->
+                <section class="bg-white rounded-lg shadow-md p-6 mb-8">
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <!-- Job Description Upload -->
+                        <div>
+                            <h3 class="text-xl font-semibold text-gray-800 mb-4">1. Job Description</h3>
+                            <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 hover:border-blue-500 transition duration-200">
+                                <div class="flex flex-col items-center justify-center py-4">
+                                    <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                                    </svg>
+                                    <p class="mt-2 text-sm text-gray-600">Upload Job Description</p>
+                                    <p class="text-xs text-gray-500">PDF, DOCX, or paste text</p>
+                                </div>
+                                <input type="file" id="jd-upload" class="hidden" accept=".pdf,.docx,.txt">
+                                <div class="mt-2">
+                                    <label for="jd-upload" class="w-full bg-blue-600 hover:bg-blue-700 text-white text-center py-2 px-4 rounded-md cursor-pointer transition duration-200 block">
+                                        Choose File
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="mt-4">
+                                <label for="jd-text" class="block text-sm font-medium text-gray-700 mb-2">Or paste job description:</label>
+                                <textarea id="jd-text" rows="5" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                            </div>
+                        </div>
+
+                        <!-- CVs Upload -->
+                        <div>
+                            <h3 class="text-xl font-semibold text-gray-800 mb-4">2. Candidate CVs</h3>
+                            <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 hover:border-blue-500 transition duration-200">
+                                <div class="flex flex-col items-center justify-center py-4">
+                                    <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                                    </svg>
+                                    <p class="mt-2 text-sm text-gray-600">Upload Multiple CVs</p>
+                                    <p class="text-xs text-gray-500">PDF, DOCX, or TXT files</p>
+                                </div>
+                                <input type="file" id="cv-upload" class="hidden" accept=".pdf,.docx,.txt" multiple>
+                                <div class="mt-2">
+                                    <label for="cv-upload" class="w-full bg-blue-600 hover:bg-blue-700 text-white text-center py-2 px-4 rounded-md cursor-pointer transition duration-200 block">
+                                        Choose Files
+                                    </label>
+                                </div>
+                            </div>
+                            <div id="selected-files" class="mt-4">
+                                <!-- Selected files will appear here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Analyze button -->
+                    <div class="mt-6 text-center">
+                        <button id="analyze-btn" class="gradient-bg text-white font-medium py-3 px-8 rounded-full shadow-lg hover:shadow-xl transition duration-200">
+                            Analyze CVs with NLP
+                        </button>
+                        <div id="loading-spinner" class="mt-4 hidden">
+                            <div class="inline-block h-8 w-8 border-4 border-blue-200 rounded-full loader"></div>
+                            <p class="text-gray-600 mt-2">Processing documents with NLP...</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Results section -->
+                <section id="results-section" class="hidden">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-xl font-semibold text-gray-800">Results</h3>
+                        <div>
+                            <label for="result-filter" class="mr-2 text-sm text-gray-600">Filter by:</label>
+                            <select id="result-filter" class="border border-gray-300 rounded-md px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <option value="all">All CVs</option>
+                                <option value="top10">Top 10 Matches</option>
+                                <option value="above80">Match Score >80%</option>
+                                <option value="above60">Match Score >60%</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div id="results-container" class="grid gap-4">
+                        <!-- Sample result - will be dynamically generated -->
+                        <div class="cv-card bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition duration-200">
+                            <div class="flex justify-between items-start mb-2">
+                                <h4 class="text-lg font-medium text-gray-800">John Doe</h4>
+                                <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
+                                    92% Match
+                                </span>
+                            </div>
+                            <p class="text-gray-600 text-sm mb-4">Software Engineer | 5 years experience | Python, JavaScript</p>
+                            <div class="mb-4">
+                                <div class="flex justify-between text-xs text-gray-500 mb-1">
+                                    <span>Relevance Score</span>
+                                    <span>92%</span>
+                                </div>
+                                <div class="w-full bg-gray-200 rounded-full h-2">
+                                    <div class="bg-green-500 h-2 rounded-full" style="width: 92%"></div>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                <p class="text-sm font-medium text-gray-700 mb-1">Key Skills Matched:</p>
+                                <div class="flex flex-wrap gap-1">
+                                    <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">Machine Learning</span>
+                                    <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">Python</span>
+                                    <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">TensorFlow</span>
+                                    <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">AWS</span>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                <p class="text-sm font-medium text-gray-700 mb-1">Semantic Similarity Highlights:</p>
+                                <p class="text-sm text-gray-600">
+                                    "<span class="highlight">5 years of machine learning experience</span> directly matches the job requirement. Also found <span class="highlight">cloud deployment experience</span> which aligns with your AWS needs."
+                                </p>
+                            </div>
+                            <div class="flex justify-between text-sm">
+                                <button class="text-blue-600 hover:text-blue-800 font-medium">View Full CV</button>
+                                <button class="text-green-600 hover:text-green-800 font-medium">Shortlist Candidate</button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="bg-gray-800 text-white py-8">
+            <div class="container mx-auto px-4">
+                <div class="grid md:grid-cols-3 gap-8">
+                    <div>
+                        <h3 class="text-lg font-semibold mb-4">CVNLP</h3>
+                        <p class="text-gray-400">Using advanced NLP and semantic analysis to revolutionize your hiring process.</p>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-semibold mb-4">Quick Links</h3>
+                        <ul class="space-y-2">
+                            <li><a href="#" class="text-gray-400 hover:text-white">Privacy Policy</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-white">Terms of Service</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-white">API Documentation</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-semibold mb-4">Contact</h3>
+                        <p class="text-gray-400">hello@cvnlp.ai</p>
+                        <p class="text-gray-400">+1 (555) 123-4567</p>
+                    </div>
+                </div>
+                <div class="mt-8 pt-8 border-t border-gray-700 text-center text-gray-400 text-sm">
+                    <p>© 2023 CVNLP. All rights reserved.</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Handle CV file selection
+            const cvUpload = document.getElementById('cv-upload');
+            const selectedFilesContainer = document.getElementById('selected-files');
+            
+            cvUpload.addEventListener('change', function(e) {
+                selectedFilesContainer.innerHTML = '';
+                
+                if (this.files.length > 0) {
+                    const fileList = document.createElement('ul');
+                    fileList.className = 'border border-gray-200 rounded-md divide-y divide-gray-200';
+                    
+                    for (let i = 0; i < this.files.length; i++) {
+                        const fileItem = document.createElement('li');
+                        fileItem.className = 'px-3 py-2 text-sm flex justify-between items-center';
+                        
+                        const fileInfo = document.createElement('div');
+                        fileInfo.className = 'flex items-center';
+                        
+                        const fileIcon = document.createElement('span');
+                        fileIcon.className = 'mr-2';
+                        fileIcon.innerHTML = 
+                            '<svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>';
+                        
+                        const fileName = document.createTextNode(this.files[i].name);
+                        
+                        fileInfo.appendChild(fileIcon);
+                        fileInfo.appendChild(fileName);
+                        
+                        const fileSize = document.createElement('span');
+                        fileSize.className = 'text-gray-500';
+                        const sizeInMB = (this.files[i].size / (1024*1024)).toFixed(2);
+                        fileSize.textContent = sizeInMB + ' MB';
+                        
+                        fileItem.appendChild(fileInfo);
+                        fileItem.appendChild(fileSize);
+                        
+                        fileList.appendChild(fileItem);
+                    }
+                    
+                    selectedFilesContainer.appendChild(fileList);
+                    const countBadge = document.createElement('span');
+                    countBadge.className = 'inline-block bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full ml-2';
+                    countBadge.textContent = this.files.length + ' selected';
+                    
+                    selectedFilesContainer.insertBefore(countBadge, fileList);
+                }
+            });
+            
+            // Handle analyze button click
+            const analyzeBtn = document.getElementById('analyze-btn');
+            const loadingSpinner = document.getElementById('loading-spinner');
+            const resultsSection = document.getElementById('results-section');
+            const resultsContainer = document.getElementById('results-container');
+            
+            analyzeBtn.addEventListener('click', function() {
+                const jdText = document.getElementById('jd-text').value.trim();
+                const jdFile = document.getElementById('jd-upload').files[0];
+                const cvFiles = document.getElementById('cv-upload').files;
+                
+                if ((!jdText && !jdFile) || cvFiles.length === 0) {
+                    alert('Please provide both a job description and at least one CV to analyze');
+                    return;
+                }
+                
+                // Show loading spinner
+                loadingSpinner.classList.remove('hidden');
+                analyzeBtn.disabled = true;
+                
+                // Simulate processing time (in a real app, this would call your API)
+                setTimeout(() => {
+                    // Hide spinner
+                    loadingSpinner.classList.add('hidden');
+                    analyzeBtn.disabled = false;
+                    
+                    // Show results section
+                    resultsSection.classList.remove('hidden');
+                    
+                    // Clear previous results
+                    resultsContainer.innerHTML = '';
+                    
+                    // Generate mock results (in a real app, these would come from your API)
+                    generateMockResults();
+                    
+                    // Scroll to results
+                    resultsSection.scrollIntoView({ behavior: 'smooth' });
+                }, 2500);
+            });
+        });
